@@ -14,7 +14,7 @@ import { etsyConnected, etsySummary } from "@/lib/integrations/etsy";
 import { stripeConfigured, stripeSummary } from "@/lib/integrations/stripe";
 import { homePlace, weatherConfigured, weatherReport } from "@/lib/integrations/weather";
 import { callsConfigured } from "@/lib/integrations/elevenAgents";
-import { kitMode } from "@/lib/kit/kit";
+import { kitMode, personalize } from "@/lib/kit/kit";
 import { addMemory, recallMemories } from "@/lib/memory";
 import { addTodo, findOpenTodo, formatDue, listTodos, setTodoDone } from "@/lib/todos";
 
@@ -771,5 +771,7 @@ export function jarvisTools(emit: (e: ToolEvent) => void) {
       }),
     );
   }
+  // On a client's assistant, tool descriptions name the client and their assistant, not Tommy and Jarvis.
+  if (kitMode()) for (const t of tools as { description?: string }[]) if (t.description) t.description = personalize(t.description);
   return tools;
 }
