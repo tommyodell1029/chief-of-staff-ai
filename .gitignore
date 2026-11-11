@@ -1,0 +1,24 @@
+# dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# secrets — never commit these
+.env
+.env.local
+.env.*.local
+
+# local database (your chat history and memories live here)
+data/*.db
+data/*.db-*
+
+# HTTPS dev certificates
+certificates/
+
+# OS / editor junk
+.DS_Store
+*.log

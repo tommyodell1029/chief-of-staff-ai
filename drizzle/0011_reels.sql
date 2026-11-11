@@ -1,0 +1,1 @@
+ALTER TABLE `content_items` ADD `video_file` text;

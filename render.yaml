@@ -1,0 +1,88 @@
+# Render Blueprint for a Chief of Staff AI assistant. Render reads this when you create a Blueprint from this
+# repository; it asks for the values marked sync: false. See docs/client-setup.md.
+services:
+  - type: web
+    name: chief-of-staff
+    runtime: node
+    plan: starter # ~$7/month. The free plan sleeps and has no disk.
+    region: ohio
+    branch: main
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    disk:
+      name: assistant-data
+      mountPath: /var/data # the database, memories, files and media live here and survive restarts
+      sizeGB: 1
+    envVars:
+      - key: KIT_MODE
+        value: "1"
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATA_DIR
+        value: /var/data
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DAILY_SPEND_CAP_USD
+        value: "3"
+      - key: MONTHLY_SPEND_CAP_USD
+        value: "35"
+      - key: MAX_REQUESTS_PER_MINUTE
+        value: "20"
+      - key: LUNCH_CHECKIN_CRON
+        value: "0 12 * * 1-5"
+      - key: EVENING_REVIEW_CRON
+        value: "30 20 * * *"
+      - key: MORNING_BRIEFING_CRON
+        value: "off"
+      - key: RESEARCH_CRON
+        value: "0 4 * * *"
+      - key: RANKING_CRON
+        value: "0 7 * * 0"
+      # Render asks for these:
+      - key: TZ
+        sync: false # e.g. America/New_York
+      - key: JARVIS_PASSWORD
+        sync: false # the sign-in password for the assistant
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: ELEVENLABS_VOICE_ID
+        sync: false
+      - key: HOME_CITY
+        sync: false
+      - key: HOME_REGION
+        sync: false
+      # Optional connections (docs/connections-setup.md)
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: SALESHANDY_API_KEY
+        sync: false
+      - key: STRIPE_API_KEY
+        sync: false
+      - key: ETSY_API_KEY
+        sync: false
+      - key: ETSY_SHARED_SECRET
+        sync: false
+      - key: PRINTIFY_API_TOKEN
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      # Optional: another AI provider instead of Claude (docs/choose-your-model.md)
+      - key: AI_PROVIDER
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: AI_MODEL
+        sync: false
+      - key: MAPS_DAILY_LIMIT
+        value: "25"
+      - key: MAPS_MONTHLY_LIMIT
+        value: "900"
+      - key: WEATHER_DAILY_LIMIT
+        value: "60"
