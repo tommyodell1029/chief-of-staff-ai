@@ -5,6 +5,7 @@
 import { and, desc, eq, gte } from "drizzle-orm";
 import { getDb, schema } from "@/lib/db";
 import type { ApprovalAction } from "@/lib/integrations/actions";
+import { kitMode, kitProfile, personalize } from "@/lib/kit/kit";
 import { getSetting, setSetting } from "@/lib/settings";
 
 export type Lane = "nina_post" | "nina_ad" | "etsy_listing" | "crew_email" | "prospect_reply";
@@ -50,6 +51,23 @@ export const LANES: Record<Lane, LaneInfo> = {
 };
 
 export const LANE_IDS = Object.keys(LANES) as Lane[];
+
+// The lanes that apply here. A client's assistant (kit mode) gets only the lanes its businesses use: crew emails
+// always, Etsy listings with an Etsy business, prospect replies with outreach. Labels use the client's names.
+export function visibleLanes(): Lane[] {
+  if (!kitMode()) return LANE_IDS;
+  const p = kitProfile();
+  const lanes: Lane[] = [];
+  if (p?.businesses.some((b) => b.modules.includes("etsy"))) lanes.push("etsy_listing");
+  lanes.push("crew_email");
+  if (p?.outreach || p?.businesses.some((b) => b.modules.includes("outreach"))) lanes.push("prospect_reply");
+  return lanes;
+}
+
+export function laneInfo(lane: Lane): LaneInfo {
+  const info = LANES[lane];
+  return kitMode() ? { ...info, label: personalize(info.label), detail: personalize(info.detail) } : info;
+}
 const DAY = 24 * 3600 * 1000;
 const db = () => getDb();
 
@@ -183,9 +201,9 @@ export function declineOffer(lane: Lane) {
 // ---------- Overview ----------
 
 export function trustOverview() {
-  const lanes = LANE_IDS.map((id) => ({
+  const lanes = visibleLanes().map((id) => ({
     id,
-    ...LANES[id],
+    ...laneInfo(id),
     auto: laneAuto(id),
     current: currentStreak(id),
     autoToday: autoToday(id),
@@ -198,7 +216,7 @@ export function trustOverview() {
     .limit(30)
     .all()
     .filter((e) => e.outcome === "auto" || e.outcome === "failed")
-    .map((e) => ({ lane: e.lane, label: LANES[e.lane as Lane]?.label ?? e.lane, outcome: e.outcome, summary: e.summary, at: e.createdAt }));
+    .map((e) => ({ lane: e.lane, label: LANES[e.lane as Lane] ? laneInfo(e.lane as Lane).label : e.lane, outcome: e.outcome, summary: e.summary, at: e.createdAt }));
   return { lanes, recent };
 }
 

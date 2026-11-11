@@ -129,7 +129,7 @@ export default function TodayBar({ status, onChanged }: { status: Status | null;
           href="/trust"
           className="rounded-lg border border-line px-2.5 py-1.5 text-xs text-muted transition hover:border-accent hover:text-ink sm:px-3 sm:py-2 sm:text-sm"
         >
-          Trust
+          Autopilot
         </Link>
         <Link
           href="/connections"

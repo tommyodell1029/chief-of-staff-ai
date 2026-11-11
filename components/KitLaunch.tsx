@@ -25,11 +25,16 @@ export default function KitLaunch() {
   const [s, setS] = useState<KitState | null>(null);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [lanes, setLanes] = useState<{ id: string; label: string; auto: boolean; current: number; streak: number; dailyCap: number }[]>([]);
 
   const load = useCallback(() => {
     fetch("/api/kit")
       .then((r) => r.json())
       .then(setS)
+      .catch(() => {});
+    fetch("/api/trust")
+      .then((r) => r.json())
+      .then((d) => setLanes(d.lanes ?? []))
       .catch(() => {});
   }, []);
   useEffect(() => {
@@ -118,6 +123,35 @@ export default function KitLaunch() {
           </li>
         ))}
       </ul>
+
+      {/* Autopilot: earned, lane by lane, after launch. */}
+      {s?.profile && lanes.length > 0 && (
+        <div className="mt-5 rounded-2xl border border-line bg-panel p-4 text-sm">
+          <div className="flex items-baseline gap-2">
+            <p className="font-semibold">Autopilot</p>
+            <Link href="/trust" className="ml-auto text-xs text-accent underline">
+              Manage
+            </Link>
+          </div>
+          <p className="mt-1 text-xs text-muted">
+            Everything starts on &ldquo;ask me&rdquo;. Approve a kind of action enough times without changes and {idn.assistant} offers to handle it on its own, under a daily
+            cap. It tells you each time, and goes back to asking if anything fails. Money, calls and contracts always wait for you.
+          </p>
+          <ul className="mt-3 space-y-2">
+            {lanes.map((l) => (
+              <li key={l.id}>
+                <div className="flex items-baseline gap-2 text-xs">
+                  <span className="text-ink">{l.label}</span>
+                  <span className={`ml-auto ${l.auto ? "text-accent" : "text-muted"}`}>{l.auto ? `on autopilot · up to ${l.dailyCap}/day` : `${Math.min(l.current, l.streak)}/${l.streak} clean approvals`}</span>
+                </div>
+                <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-panel-2">
+                  <div className="h-full bg-accent transition-all" style={{ width: `${l.auto ? 100 : Math.max(3, Math.min(100, (l.current / l.streak) * 100))}%` }} />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

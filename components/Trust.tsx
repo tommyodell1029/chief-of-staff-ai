@@ -3,6 +3,7 @@
 // did on autopilot lately.
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useIdentity } from "@/lib/client/identity";
 
 interface LaneRow {
   id: string;
@@ -21,6 +22,7 @@ interface Data {
 
 export default function Trust() {
   const [data, setData] = useState<Data | null>(null);
+  const idn = useIdentity();
 
   useEffect(() => {
     fetch("/api/trust")
@@ -42,12 +44,12 @@ export default function Trust() {
         <Link href="/" className="rounded-lg border border-line px-3 py-2 text-sm text-muted hover:text-ink">
           ← Command Center
         </Link>
-        <h1 className="text-xl font-semibold">Trust ladder</h1>
+        <h1 className="text-xl font-semibold">Autopilot</h1>
       </header>
       <p className="mb-4 text-sm text-muted">
-        Every approval you give without changes counts toward a streak. When a streak is long enough, Jarvis asks whether he can handle that kind of action
-        himself. On autopilot he stays under a daily cap, tells you about each one, and goes back to asking if anything fails. Editing or denying one
-        restarts its streak. Money, phone calls and contracts always wait for you.
+        Every approval you give without changes counts toward a streak. When a streak is long enough, {idn.assistant} asks whether it can handle that kind of
+        action on its own (autopilot). On autopilot it stays under a daily cap, tells you about each one, and goes back to asking if anything fails. Editing
+        or denying one restarts its streak. Money, phone calls and contracts always wait for you.
       </p>
 
       <ul className="space-y-2">
