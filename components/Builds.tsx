@@ -30,10 +30,24 @@ interface BuildView {
   warmupDaysLeft: number | null;
 }
 
+interface Signup {
+  id: number;
+  name: string;
+  email: string;
+  interest: "kit" | "done-for-you" | "updates";
+  idea: string;
+  at: number;
+  buildId?: number;
+  handled?: boolean;
+}
+const INTEREST: Record<Signup["interest"], string> = { kit: "Kit ($197)", "done-for-you": "Done-for-you", updates: "Updates" };
+
 const STATUS_LABEL: Record<string, string> = { kickoff: "Kickoff", building: "Building", warming: "Warming up", ready: "Ready to launch", launched: "Launched", paused: "Paused" };
 
 export default function Builds() {
   const [builds, setBuilds] = useState<BuildView[] | null>(null);
+  const [signups, setSignups] = useState<Signup[]>([]);
+  const [showHandled, setShowHandled] = useState(false);
   const [open, setOpen] = useState<number | null>(null);
   const [form, setForm] = useState({ client: "", email: "" });
   const [notes, setNotes] = useState("");
@@ -43,7 +57,10 @@ export default function Builds() {
   const load = useCallback(() => {
     fetch("/api/builds")
       .then((r) => r.json())
-      .then((d) => setBuilds(d.builds ?? []))
+      .then((d) => {
+        setBuilds(d.builds ?? []);
+        setSignups(d.signups ?? []);
+      })
       .catch(() => {});
   }, []);
   useEffect(() => load(), [load]);
@@ -79,6 +96,53 @@ export default function Builds() {
         One card per done-for-you client. After the kickoff call, paste or dictate your notes: Jarvis writes their setup file and the build checklist. Work it
         down, start the warm-up countdown, and they press Launch on their own assistant when it&apos;s all green.
       </p>
+
+      {signups.length > 0 && (
+        <div className="mb-4 rounded-2xl border border-line bg-panel p-3 text-sm">
+          <div className="mb-2 flex items-baseline gap-2">
+            <p className="font-semibold">Sales page sign-ups</p>
+            <span className="text-xs text-muted">
+              {signups.filter((s) => !s.handled).length} new · {signups.filter((s) => s.interest === "kit").length} kit · {signups.filter((s) => s.interest === "done-for-you").length} done-for-you
+            </span>
+            <button onClick={() => setShowHandled(!showHandled)} className="ml-auto text-xs text-muted hover:text-ink">
+              {showHandled ? "Hide handled" : "Show handled"}
+            </button>
+          </div>
+          <ul className="space-y-2">
+            {signups
+              .filter((s) => showHandled || !s.handled)
+              .map((s) => (
+                <li key={s.id} className={`rounded-lg bg-panel-2 p-2 ${s.handled ? "opacity-50" : ""}`}>
+                  <div className="flex flex-wrap items-baseline gap-x-2">
+                    <span className="font-medium">{s.name}</span>
+                    <a href={`mailto:${s.email}`} className="text-xs text-accent underline">
+                      {s.email}
+                    </a>
+                    <span className="rounded-full border border-line px-2 text-xs text-muted">{INTEREST[s.interest]}</span>
+                    <span className="ml-auto text-xs text-muted">{new Date(s.at).toLocaleDateString([], { month: "short", day: "numeric" })}</span>
+                  </div>
+                  {s.idea && <p className="mt-1 text-xs text-muted">Wants to run: {s.idea}</p>}
+                  <div className="mt-1 flex gap-3 text-xs">
+                    {s.buildId && (
+                      <button onClick={() => setOpen(s.buildId!)} className="text-accent underline">
+                        Open their build
+                      </button>
+                    )}
+                    <button
+                      onClick={async () => {
+                        await fetch("/api/builds", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ signup: s.id, handled: !s.handled }) });
+                        load();
+                      }}
+                      className="text-muted hover:text-ink"
+                    >
+                      {s.handled ? "Mark new" : "Mark handled"}
+                    </button>
+                  </div>
+                </li>
+              ))}
+          </ul>
+        </div>
+      )}
 
       <div className="mb-4 flex flex-wrap gap-2 rounded-2xl border border-line bg-panel p-3 text-sm">
         <input value={form.client} onChange={(e) => setForm({ ...form, client: e.target.value })} placeholder="Client name" className="min-w-0 flex-1 rounded-lg border border-line bg-panel-2 px-2 py-1.5" />
