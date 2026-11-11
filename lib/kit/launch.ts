@@ -27,11 +27,11 @@ export async function readiness(now = Date.now()): Promise<ReadyItem[]> {
   const db = getDb();
   const p = kitProfile();
   const items: ReadyItem[] = [];
-  items.push({ id: "profile", label: "Setup file imported", ok: !!p, required: true, detail: p ? `${p.assistant.name} for ${p.owner.name}` : "Import the setup file from your kickoff call.", fix: p ? undefined : { label: "Import it", href: "/setup" } });
+  items.push({ id: "profile", label: "Assistant set up", ok: !!p, required: true, detail: p ? `${p.assistant.name} for ${p.owner.name}` : "Name your assistant (or import the setup file from your kickoff call).", fix: p ? undefined : { label: "Set up", href: "/setup" } });
   const problem = providerProblem();
   items.push({ id: "brain", label: "AI brain connected", ok: !problem, required: true, detail: problem ?? "Ready", fix: problem ? { label: "Connections", href: "/connections" } : undefined });
   const businesses = db.select().from(schema.businesses).all();
-  items.push({ id: "crews", label: "Crews built", ok: businesses.length > 0, required: true, detail: businesses.length ? `${businesses.length} business${businesses.length === 1 ? "" : "es"}, ${db.select().from(schema.agents).all().length} agents` : "Import the setup file to build them." });
+  items.push({ id: "crews", label: "Crews built", ok: businesses.length > 0, required: true, detail: businesses.length ? `${businesses.length} business${businesses.length === 1 ? "" : "es"}, ${db.select().from(schema.agents).all().length} agents` : "Tell your assistant what business you want to run (or import a setup file).", fix: businesses.length ? undefined : { label: "Add a business", href: "/ideas" } });
   const voice = !!(process.env.ELEVENLABS_API_KEY && process.env.ELEVENLABS_VOICE_ID);
   items.push({ id: "voice", label: "Voice set up", ok: voice, required: false, detail: voice ? "Ready" : "Optional: add ELEVENLABS_API_KEY and ELEVENLABS_VOICE_ID in Render for spoken answers." });
 

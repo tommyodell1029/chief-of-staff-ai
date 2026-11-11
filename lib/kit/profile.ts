@@ -40,7 +40,8 @@ export const profileSchema = z.object({
         modules: z.array(z.enum(MODULES)).min(1),
       }),
     )
-    .min(1),
+    .default([])
+    .describe("Can be empty: the owner can describe businesses to the assistant later and it researches them"),
   outreach: z
     .object({
       business: z.string().describe("Which business the outreach is for (its name)"),

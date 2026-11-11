@@ -448,6 +448,28 @@ export function jarvisTools(emit: (e: ToolEvent) => void) {
       },
     }),
     betaZodTool({
+      name: "can_you_run",
+      description:
+        "When Tommy describes a business he wants to run (or asks whether Jarvis could run one): 'vet' researches it on the web and gives an honest verdict on whether the crews can run it, what he'd still do, costs and risks (takes a minute or two, so say you're on it); 'status' reads the latest verdicts; 'adopt' sets up a researched idea as a business with a draft crew, only when he says to go ahead.",
+      inputSchema: z.object({ action: z.enum(["vet", "status", "adopt"]), idea: z.string().optional(), id: z.number().optional() }),
+      run: async ({ action, idea, id }) => {
+        const v = await import("@/lib/kit/vetting");
+        emit({ type: "tool", name: "can_you_run", detail: action });
+        if (action === "vet") {
+          if (!idea?.trim()) return "What business should I look into?";
+          const row = v.vetIdea(idea);
+          return `Researching it now (idea #${row.id}). I'll have a verdict in a minute or two; it'll also be on the Can you run this? page.`;
+        }
+        const ideas = v.listIdeas().filter((i) => i.status !== "dismissed");
+        if (action === "adopt") {
+          const target = id ? v.getIdea(id) : ideas.find((i) => i.status === "done");
+          if (!target) return "There's no researched idea to set up yet.";
+          return v.adoptIdea(target.id).message;
+        }
+        return ideas.length ? ideas.slice(0, 3).map((i) => `#${i.id}: ${v.ideaText(i)}`).join("\n") : "No business ideas researched yet.";
+      },
+    }),
+    betaZodTool({
       name: "boost_picks",
       description: "Pick Nina's best Etsy posts from the last 3 weeks to boost (from the likes/comments/saves Tommy entered in Nina Studio). A suggestion only; Tommy boosts in the Instagram app himself.",
       inputSchema: z.object({}),

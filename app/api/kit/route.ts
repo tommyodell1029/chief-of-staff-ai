@@ -1,9 +1,9 @@
 // The client's assistant (kit mode): GET → setup file, readiness checklist, launch state.
-// POST {action: "import", profile} | {action: "launch"} | {action: "pause"} | {action: "warmup_done"}
+// POST {action: "start", owner, assistant} (no setup file: the owner sets up themselves) | {action: "import", profile} | {action: "launch"} | {action: "pause"} | {action: "warmup_done"}
 import { createKitCrews } from "@/lib/kit/crews";
 import { kitMode, kitProfile, saveKitProfile } from "@/lib/kit/kit";
 import { launch, launched, pause, paused, readiness } from "@/lib/kit/launch";
-import { parseProfile } from "@/lib/kit/profile";
+import { parseProfile, profileSchema } from "@/lib/kit/profile";
 import { setSetting } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
@@ -15,8 +15,16 @@ export async function GET() {
 
 export async function POST(req: Request) {
   if (!kitMode()) return Response.json({ error: "Only on client assistants (KIT_MODE=1)." }, { status: 400 });
-  const b = (await req.json().catch(() => ({}))) as { action?: string; profile?: unknown };
+  const b = (await req.json().catch(() => ({}))) as { action?: string; profile?: unknown; owner?: unknown; assistant?: unknown };
   try {
+    if (b.action === "start") {
+      // Self-serve: just names to begin with. Businesses come from "Can you run this?" (/ideas).
+      const prev = kitProfile();
+      const p = parseProfile({ ...(prev ?? {}), version: 1, owner: b.owner, assistant: b.assistant, businesses: prev?.businesses ?? [] });
+      profileSchema.parse(p);
+      saveKitProfile(p);
+      return Response.json({ ok: true, message: `${p.assistant.name} is ready for ${p.owner.name}. Next: tell ${p.assistant.name} what business you want to run.` });
+    }
     if (b.action === "import") {
       const p = parseProfile(typeof b.profile === "string" ? JSON.parse(b.profile) : b.profile);
       saveKitProfile(p);
