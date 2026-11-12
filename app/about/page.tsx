@@ -1,9 +1,11 @@
 "use client";
+import { useIdentity } from "@/lib/client/identity";
 // Edit the About Tommy profile that Jarvis reads before every reply.
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function AboutPage() {
+  const idn = useIdentity();
   const [text, setText] = useState<string | null>(null);
   const [saved, setSaved] = useState<"idle" | "saving" | "saved" | "error">("idle");
 
@@ -29,7 +31,7 @@ export default function AboutPage() {
         <Link href="/" className="rounded-lg border border-line px-3 py-2 text-sm text-muted hover:text-ink">
           ← Command Center
         </Link>
-        <h1 className="text-xl font-semibold">About Tommy</h1>
+        <h1 className="text-xl font-semibold">About {idn.kit ? idn.owner : "Tommy"}</h1>
         <button
           onClick={save}
           disabled={text === null || saved === "saving"}

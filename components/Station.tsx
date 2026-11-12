@@ -78,7 +78,7 @@ const DOING: Record<string, string> = {
   clients: "Checking clients",
   walkin_audit: "Auditing on Google Maps",
   holiday_listings: "Updating Etsy listings",
-  boost_picks: "Ranking Nina's posts",
+  boost_picks: "Ranking posts to boost",
   crew_questions: "Checking the crew's questions",
   night_shift: "Setting up the night shift",
 };

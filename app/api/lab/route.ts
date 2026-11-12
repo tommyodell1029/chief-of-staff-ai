@@ -1,5 +1,5 @@
 // GET /api/lab — the shortlist and recent research notes. POST /api/lab {action: "research" | "rank"} — run one now.
-import { listNotes, listOpportunities, runDailyResearch, runWeeklyRanking, SCORE_LABELS, RESEARCH_AREAS } from "@/lib/growth/lab";
+import { listNotes, listOpportunities, runDailyResearch, runWeeklyRanking, SCORE_LABELS, researchAreas } from "@/lib/growth/lab";
 import { spendToday } from "@/lib/spend";
 
 export const dynamic = "force-dynamic";
@@ -9,7 +9,7 @@ export async function GET() {
     opportunities: listOpportunities(),
     notes: listNotes(40).filter((n) => !n.area.startsWith("agent:")),
     scoreLabels: SCORE_LABELS,
-    areas: RESEARCH_AREAS.map((a) => a.area),
+    areas: researchAreas().map((a) => a.area),
   });
 }
 

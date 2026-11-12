@@ -77,7 +77,7 @@ export default function Clients() {
       {adding && (
         <div className="mb-4 grid gap-2 rounded-2xl border border-line bg-panel p-3 text-sm sm:grid-cols-2">
           <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Business name (as on Google Maps)" className="rounded-lg border border-line bg-panel-2 px-2 py-1.5" />
-          <input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} placeholder="City, e.g. Jacksonville, FL" className="rounded-lg border border-line bg-panel-2 px-2 py-1.5" />
+          <input value={form.city} onChange={(e) => setForm({ ...form, city: e.target.value })} placeholder="City, e.g. Tampa, FL" className="rounded-lg border border-line bg-panel-2 px-2 py-1.5" />
           <input value={form.keywords} onChange={(e) => setForm({ ...form, keywords: e.target.value })} placeholder="Up to 3 searches, comma-separated: plumber, water heater repair" className="rounded-lg border border-line bg-panel-2 px-2 py-1.5 sm:col-span-2" />
           <input value={form.website} onChange={(e) => setForm({ ...form, website: e.target.value })} placeholder="Website (helps find them)" className="rounded-lg border border-line bg-panel-2 px-2 py-1.5" />
           <select value={form.plan} onChange={(e) => setForm({ ...form, plan: e.target.value })} className="rounded-lg border border-line bg-panel-2 px-2 py-1.5">

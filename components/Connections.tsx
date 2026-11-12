@@ -1,4 +1,5 @@
 "use client";
+import { useIdentity } from "@/lib/client/identity";
 // Connections: what Jarvis is plugged into, and how to plug in the rest.
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -28,6 +29,7 @@ interface Status {
 }
 
 export default function Connections() {
+  const idn = useIdentity();
   const [s, setS] = useState<Status | null>(null);
   const [msg, setMsg] = useState<string | null>(null);
 
@@ -171,26 +173,30 @@ export default function Connections() {
             name="Google key"
             ok={s.gemini.on}
             detail={s.gemini.on ? `Gemini images${s.gemini.youtube ? " · YouTube trends" : ""}` : "Not set up"}
-            what="Gemini: Nina's images and listing designs (a few cents each). YouTube: real view counts for the Growth Lab (free)."
+            what="Gemini: post images and listing designs (a few cents each). YouTube: real view counts for the Growth Lab (free)."
           />
-          <Row name="Gemini images" ok={s.geminiImages.on && s.geminiImages.ok} detail={status(s.geminiImages)} what="Which image model Jarvis found for your key. Google retires these often; Jarvis switches to the newest one automatically." />
-          <Row name="Instagram" ok={s.instagram.on && s.instagram.ok} detail={status(s.instagram)} what="Approved Nina posts publish automatically." />
-          <Row name="Nina's voice" ok={s.ninaVoice.on} detail={s.ninaVoice.on ? "Voice ID set" : "Optional"} what="Voiceovers for Reels/TikToks (uses your ElevenLabs credits)." />
+          <Row name="Gemini images" ok={s.geminiImages.on && s.geminiImages.ok} detail={status(s.geminiImages)} what={`Which image model ${idn.assistant} found for your key. Google retires these often; it switches to the newest one automatically.`} />
+          {!idn.kit && (
+            <>
+              <Row name="Instagram" ok={s.instagram.on && s.instagram.ok} detail={status(s.instagram)} what="Approved Nina posts publish automatically." />
+              <Row name="Nina's voice" ok={s.ninaVoice.on} detail={s.ninaVoice.on ? "Voice ID set" : "Optional"} what="Voiceovers for Reels/TikToks (uses your ElevenLabs credits)." />
+            </>
+          )}
           <Row
             name="Google Calendar"
             ok={s.calendar.on}
             detail={s.gmail.calendar ? "Through your Google sign-in" : s.calendar.on ? "Through the iCal link" : "Not set up"}
             what="Your schedule in briefings."
           />
-          <Row name="TikTok, Reddit, Fanvue" ok={false} detail="Share packages for now" what="Their posting APIs need an audit or approval first; Jarvis prepares posts and you tap Share." />
+          <Row name={idn.kit ? "Instagram, TikTok" : "TikTok, Reddit, Fanvue"} ok={false} detail="Share packages for now" what={`Their posting APIs need an audit or approval first; ${idn.assistant} prepares posts and you post them.`} />
           <TelegramRow app={s.telegram.app} on={s.telegram.on} />
           <Row
             name="AI model"
             ok={!s.brain.problem}
             detail={s.brain.problem ? `Problem: ${s.brain.label}: ${s.brain.problem}` : s.brain.label}
-            what="The brain behind Jarvis and every crew. Claude by default; OpenRouter or a free local model (Ollama) also work (docs/choose-your-model.md)."
+            what={`The brain behind ${idn.assistant} and every crew. Claude by default; OpenRouter or a free local model (Ollama) also work (docs/choose-your-model.md).`}
           />
-          <Row name="Backup" ok detail="Everything Jarvis knows, in one file" what="Memories, to-dos, crews, leads, clients, settings, Nina's images and reels. Keep a copy, or use it to move Jarvis to another computer (docs/moving-off-render.md). Keys in Render's Environment aren't included.">
+          <Row name="Backup" ok detail={`Everything ${idn.assistant} knows, in one file`} what={`Memories, to-dos, crews, leads, clients, settings, images and reels. Keep a copy, or use it to move ${idn.assistant} to another computer (docs/moving-off-render.md). Keys in Render's Environment aren't included.`}>
             <a href="/api/backup" className="rounded-lg border border-line px-3 py-2 text-sm text-muted hover:text-ink">
               Download backup
             </a>

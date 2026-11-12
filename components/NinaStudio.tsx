@@ -1,4 +1,5 @@
 "use client";
+import { useIdentity } from "@/lib/client/identity";
 // Nina Studio: set up Nina's look, have Jarvis's crew create posts, approve them (Instagram posts automatically),
 // and share the rest to TikTok/Reddit/Fanvue with one tap.
 import Link from "next/link";
@@ -38,6 +39,7 @@ const media = (name: string) => `/api/media/${name}`;
 const preview = (name: string, w = 640) => `/api/media/${name}?w=${w}`; // small JPEG for the screen
 
 export default function NinaStudio() {
+  const idn = useIdentity();
   const [data, setData] = useState<StudioData | null>(null);
   const [flash, setFlash] = useState<string | null>(null);
   const [persona, setPersona] = useState("");
@@ -117,6 +119,7 @@ export default function NinaStudio() {
   const ready = data?.posts.filter((p) => p.status === "approved") ?? [];
   const done = data?.posts.filter((p) => p.status === "posted") ?? [];
 
+  if (idn.kit) return <div className="mx-auto max-w-xl p-6 text-sm text-muted">Studio isn't part of this assistant.</div>;
   return (
     <div className="mx-auto max-w-4xl p-4">
       <header className="mb-3 flex flex-wrap items-center gap-3">

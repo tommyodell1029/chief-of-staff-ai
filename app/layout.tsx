@@ -1,9 +1,10 @@
+import KitNames from "@/components/KitNames";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Jarvis",
-  description: "Tommy's Command Center",
+  description: "Your Command Center",
   appleWebApp: { capable: true, title: "Jarvis", statusBarStyle: "black-translucent" },
 };
 
@@ -17,7 +18,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="min-h-dvh font-sans antialiased">{children}</body>
+      <body className="min-h-dvh font-sans antialiased">
+        {children}
+        <KitNames />
+      </body>
     </html>
   );
 }

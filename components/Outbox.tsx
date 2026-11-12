@@ -20,7 +20,7 @@ const KINDS: { id: Entry["kind"] | "all"; label: string }[] = [
   { id: "file", label: "Files" },
   { id: "result", label: "Crew results" },
   { id: "audit", label: "Audits" },
-  { id: "post", label: "Nina" },
+  { id: "post", label: "Posts" },
 ];
 const ICON: Record<Entry["kind"], string> = { file: "📄", result: "✅", audit: "🗺️", post: "🎬" };
 
@@ -53,7 +53,7 @@ export default function Outbox() {
         </Link>
         <h1 className="text-xl font-semibold">Outbox</h1>
       </header>
-      <p className="mb-3 text-sm text-muted">Everything your crews finished in the last 30 days: files they saved, their results, walk-in audits and Nina&apos;s media.</p>
+      <p className="mb-3 text-sm text-muted">Everything your crews finished in the last 30 days: files they saved, their results, walk-in audits and generated media.</p>
       <div className="mb-3 flex flex-wrap gap-2">
         {KINDS.map((k) => (
           <button

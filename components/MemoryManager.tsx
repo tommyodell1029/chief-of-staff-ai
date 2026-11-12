@@ -79,7 +79,7 @@ export default function MemoryManager() {
         <input
           value={newFact}
           onChange={(e) => setNewFact(e.target.value)}
-          placeholder="Add a fact, e.g. Tommy's daughter is named…"
+          placeholder="Add a fact, e.g. My daughter's name is…"
           className="min-w-0 flex-1 basis-64 rounded-lg border border-line bg-panel-2 px-3 py-2.5 outline-none focus:border-accent/70"
         />
         <input

@@ -1,11 +1,18 @@
 // Makes Jarvis installable on the Home Screen as a full-screen app, which iPhone requires for notifications.
 import type { MetadataRoute } from "next";
+import { identity } from "@/lib/kit/kit";
+
+export const dynamic = "force-dynamic";
 
 export default function manifest(): MetadataRoute.Manifest {
+  let name = "Jarvis";
+  try {
+    name = identity().assistant;
+  } catch {}
   return {
-    name: "Jarvis",
-    short_name: "Jarvis",
-    description: "Tommy's Command Center",
+    name,
+    short_name: name,
+    description: "Your Command Center",
     start_url: "/",
     scope: "/",
     display: "standalone",

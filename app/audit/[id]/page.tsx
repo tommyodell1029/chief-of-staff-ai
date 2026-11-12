@@ -6,7 +6,7 @@ import PrintButton from "@/components/PrintButton";
 import { adsTransparencyUrl } from "@/lib/adsLink";
 
 export const dynamic = "force-dynamic";
-export const metadata = { title: "Free Google Maps check · LaunchPad Local" };
+export const metadata = { title: "Free Google Maps check" };
 
 const MARK: Record<Status, { sym: string; cls: string; word: string }> = {
   good: { sym: "✓", cls: "bg-emerald-600", word: "Looks good" },

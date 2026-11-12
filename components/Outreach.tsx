@@ -185,7 +185,7 @@ export default function Outreach() {
       <details className="mb-4 rounded-2xl border border-line bg-panel p-4" open={!!data && gmailCampaigns && !data.settings.businessAddress}>
         <summary className="cursor-pointer font-semibold">Gmail sending settings (signature for emails Jarvis sends himself)</summary>
         <div className="mt-3 space-y-2 text-sm">
-          <input value={settings.senderName} onChange={(e) => setSettings({ ...settings, senderName: e.target.value })} placeholder="Your name and business, e.g. Tommy, LaunchPad Local" className="w-full rounded-lg border border-line bg-panel-2 px-3 py-2" />
+          <input value={settings.senderName} onChange={(e) => setSettings({ ...settings, senderName: e.target.value })} placeholder="Your name and business, e.g. Alex, Bright Path Marketing" className="w-full rounded-lg border border-line bg-panel-2 px-3 py-2" />
           <input value={settings.businessAddress} onChange={(e) => setSettings({ ...settings, businessAddress: e.target.value })} placeholder="Business postal address (required by law; a PO box works)" className="w-full rounded-lg border border-line bg-panel-2 px-3 py-2" />
           <input value={settings.bookingLink} onChange={(e) => setSettings({ ...settings, bookingLink: e.target.value })} placeholder="Booking link for “yes” replies (optional, e.g. a Google Calendar booking page)" className="w-full rounded-lg border border-line bg-panel-2 px-3 py-2" />
           <button onClick={saveSettings} className="rounded-lg bg-accent px-3 py-1.5 font-semibold text-bg">
@@ -207,7 +207,7 @@ export default function Outreach() {
       <details className="rounded-2xl border border-line bg-panel p-4" open={data?.campaigns.length === 0}>
         <summary className="cursor-pointer font-semibold">New campaign</summary>
         <div className="mt-3 space-y-2 text-sm">
-          <input value={newOne.name} onChange={(e) => setNewOne({ ...newOne, name: e.target.value })} placeholder="Name, e.g. Free audit: Jacksonville plumbers" className="w-full rounded-lg border border-line bg-panel-2 px-3 py-2" />
+          <input value={newOne.name} onChange={(e) => setNewOne({ ...newOne, name: e.target.value })} placeholder="Name, e.g. Free audit: Tampa plumbers" className="w-full rounded-lg border border-line bg-panel-2 px-3 py-2" />
           <textarea value={newOne.brief} onChange={(e) => setNewOne({ ...newOne, brief: e.target.value })} rows={10} className="w-full rounded-lg border border-line bg-panel-2 p-3 text-sm" />
           <SendWith sequences={sh?.sequences ?? []} value={newOne.sequenceId} onChange={(sequenceId) => setNewOne({ ...newOne, sequenceId })} />
           {!newOne.sequenceId && (

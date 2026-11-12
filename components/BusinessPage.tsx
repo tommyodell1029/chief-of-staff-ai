@@ -39,9 +39,9 @@ const MODEL_OPTIONS = [
 const TOOL_LABELS: Record<string, string> = {
   web_search: "Web search",
   save_note: "Own notebook",
-  request_approval: "Ask Tommy for approval",
+  request_approval: "Ask you for approval",
   email_draft: "Gmail drafts (sent after approval)",
-  create_post: "Nina Studio posts",
+  create_post: "Studio posts",
   add_leads: "Add leads to outreach",
   create_listing: "Etsy listings (via Printify)",
 };
@@ -148,7 +148,7 @@ export default function BusinessPage({ id }: { id: number }) {
       <h2 className="mb-2 text-sm font-semibold tracking-wide text-muted">TASKS</h2>
       {tasks.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-line p-6 text-center text-muted">
-          No tasks yet. Give an agent a task above, or ask Jarvis (“have the Prospector find 20 HVAC companies in Jacksonville”).
+          No tasks yet. Give an agent a task above, or ask Jarvis (“have the Prospector find 20 HVAC companies near me”).
         </p>
       ) : (
         <ul className="space-y-2">

@@ -1,4 +1,5 @@
 // The Growth Lab: daily research, the weekly Top 5 + add-ons, and "business in a box" packages.
+import { kitMode, kitProfile } from "@/lib/kit/kit";
 import { betaZodTool } from "@anthropic-ai/sdk/helpers/beta/zod";
 import { desc, eq, gte } from "drizzle-orm";
 import { z } from "zod";
@@ -79,6 +80,23 @@ export const RESEARCH_AREAS = [
   },
 ];
 
+// The research areas for this assistant: Tommy's (above), or on a client's assistant one per business from their setup
+// file, plus trends, lasting assets and new models that fit their schedule.
+export function researchAreas(): { area: string; brief: string }[] {
+  if (!kitMode()) return RESEARCH_AREAS;
+  const p = kitProfile();
+  const biz = (p?.businesses ?? []).map((b, i) => ({
+    area: `biz-${i + 1}`,
+    brief: `${b.name}: ${b.summary}${b.offer ? ` Offer: ${b.offer}.` : ""}${b.area ? ` Customers in ${b.area}.` : ""} What's working for businesses like this right now: demand, what competitors charge and offer, platform or rule changes, marketing tactics that convert, and add-ons customers would buy.`,
+  }));
+  return [
+    RESEARCH_AREAS[0],
+    ...biz,
+    RESEARCH_AREAS.find((a) => a.area === "wealth")!,
+    { area: "new", brief: `Emerging online business models that fit the owner's time and skills${p?.owner.about ? ` (${p.owner.about})` : ""}: faceless content, digital products, coaching/courses, apps, agencies, and service businesses run through contractors.` },
+  ];
+}
+
 const RESEARCHER_SYSTEM = `You are the Growth Lab researcher on Jarvis's team, working for Tommy. You never talk to Tommy directly; your notes go to Jarvis.
 ${BUSINESS_CONTEXT}
 
@@ -109,7 +127,8 @@ const youtubeTool = () =>
 
 export async function runDailyResearch(areaName?: string) {
   const day = Math.floor(Date.now() / 86_400_000);
-  const area = RESEARCH_AREAS.find((a) => a.area === areaName) ?? RESEARCH_AREAS[day % RESEARCH_AREAS.length];
+  const areas = researchAreas();
+  const area = areas.find((a) => a.area === areaName) ?? areas[day % areas.length];
   const saved: { id: number; title: string }[] = [];
   const result = await runJob({
     purpose: `research_${area.area}`,
@@ -212,7 +231,9 @@ export async function runWeeklyRanking() {
 
   const businessList = businesses.length
     ? businesses.map((b) => `- ${b.name} (${b.status})`).join("\n")
-    : "- (none set up yet; use the three planned businesses by these names: Custom Photo Gifts (Etsy POD), Creator (AI influencer), LaunchPad Local)";
+    : kitMode()
+      ? "- (none set up yet: rank opportunities the owner could start)"
+      : "- (none set up yet; use the three planned businesses by these names: Custom Photo Gifts (Etsy POD), Creator (AI influencer), LaunchPad Local)";
   const result = await runJob({
     purpose: "growth_weekly_ranking",
     model: MODELS.orchestrator,
