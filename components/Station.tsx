@@ -251,7 +251,7 @@ export default function Station() {
                 acked = true;
                 setTimeout(() => {
                   if (!gotText.current && !ac.signal.aborted) {
-                    speaker.current?.push(`${ACKS[Math.floor(Math.random() * ACKS.length)]} `);
+                    speaker.current?.push(`${ACKS[Math.floor(Math.random() * ACKS.length)].replace(/\bsir\b/g, idn.address || "sir")} `);
                     speaker.current?.flush();
                   }
                 }, 900);

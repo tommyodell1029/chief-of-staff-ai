@@ -1,7 +1,14 @@
-# Client setup
+# Setup
 
-Your assistant is set up from a **setup file** (a .json file) made from your kickoff call. It holds your name, the
-assistant's name, personality and voice, your businesses and what each one needs, and your outreach plan.
+Two ways to set up your assistant:
+
+- **Starter Kit (do it yourself):** follow the 8 setup videos. In short: make your private copy of this repository
+  (GitHub → **Use this template** → Private), get an Anthropic API key with a monthly limit, deploy on Render (below),
+  then sign in, name your assistant, and tell it what business you want to run (**Can you run this?**) or start from
+  a crew template.
+- **Done for you:** your assistant is set up from a **setup file** (a .json file) made from your kickoff call. It
+  holds your name, the assistant's name, personality and voice, your businesses and what each one needs, and your
+  outreach plan.
 
 ## 1. Accounts (in your name, on your card)
 
@@ -24,8 +31,9 @@ or keys by email or text.
 ## 3. Finish setup
 
 1. Open your assistant's address and sign in.
-2. Tap **Finish setup** → choose the setup file. Your assistant gets its name and a crew for each business, all
-   waiting for Launch.
+2. Tap **Finish setup**. Starter Kit: fill in your name, what to call you and your assistant's name, then press
+   **Start** and add a business (**Can you run this?** or **Crew templates**). Done for you: choose the setup file
+   instead. Either way, every crew waits for Launch.
 3. **Connections**: connect Google (Gmail and Calendar), Telegram if you want it, and anything else your businesses
    use.
 

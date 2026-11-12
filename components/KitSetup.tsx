@@ -112,7 +112,7 @@ export default function KitSetup() {
             [
               ["name", "Your first name", "Mike"],
               ["address", "What it should call you", "sir, ma'am, or your name"],
-              ["assistant", "Your assistant's name", "Jarvis, Friday, Max…"],
+              ["assistant", "Your assistant's name", "Friday, Max, Atlas…"],
               ["city", "Your city (optional)", "Tampa, FL"],
               ["about", "Your schedule (optional)", "I work 9–5 and have about 10 hours a week"],
             ] as const

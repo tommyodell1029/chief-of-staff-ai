@@ -90,7 +90,7 @@ export default function TodayBar({ status, onChanged }: { status: Status | null;
         >
           Outreach
         </Link>
-        {status?.kit ? (
+        {!status ? null : status.kit ? (
           <Link
             href={status.kit.profile ? "/launch" : "/setup"}
             className={`rounded-lg border px-2.5 py-1.5 text-xs transition sm:px-3 sm:py-2 sm:text-sm ${status.kit.launched ? "border-line text-muted hover:border-accent hover:text-ink" : "border-accent text-accent"}`}
