@@ -40,7 +40,7 @@ interface Signup {
   buildId?: number;
   handled?: boolean;
 }
-const INTEREST: Record<Signup["interest"], string> = { kit: "Kit ($197)", "done-for-you": "Done-for-you", updates: "Updates" };
+const INTEREST: Record<Signup["interest"], string> = { kit: "Starter Kit ($27)", "done-for-you": "Done-for-you", updates: "Updates" };
 
 const STATUS_LABEL: Record<string, string> = { kickoff: "Kickoff", building: "Building", warming: "Warming up", ready: "Ready to launch", launched: "Launched", paused: "Paused" };
 

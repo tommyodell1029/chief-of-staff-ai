@@ -92,6 +92,9 @@ export default function KitSetup() {
             <Link href="/ideas" className="rounded-lg bg-accent px-3 py-1.5 font-semibold text-bg">
               {state.profile.businesses.length ? "Add a business" : "What do you want to run? →"}
             </Link>
+            <Link href="/templates" className="rounded-lg border border-line px-3 py-1.5 text-muted hover:text-ink">
+              Use a crew template
+            </Link>
             {state.profile.businesses.length > 0 && (
               <Link href="/launch" className="rounded-lg border border-line px-3 py-1.5 text-muted hover:text-ink">
                 Go to Launch →

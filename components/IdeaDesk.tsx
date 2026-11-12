@@ -86,6 +86,9 @@ export default function IdeaDesk() {
           ← Home
         </Link>
         <h1 className="text-xl font-semibold">Can you run this?</h1>
+        <Link href="/templates" className="ml-auto text-sm text-accent underline">
+          Crew templates →
+        </Link>
       </header>
 
       <div className="mb-4 rounded-2xl border border-line bg-panel p-4">
